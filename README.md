@@ -20,7 +20,7 @@ bhartipay Gateway Settings
 	Live API Key	=>  19xxxxxxxxxxxx0
 	Test API Key	=>  19xxxxxxxxxxxx0
 	 
-	Salt Key	    =>  2cafbc664d074721
+	Salt Key	    =>  2xxxxxxxxxxxx1
 
 	Merchant Name   =>  Demo Name
 
