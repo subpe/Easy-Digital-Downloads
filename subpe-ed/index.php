@@ -1,11 +1,11 @@
 <?php
 /*
-Plugin Name: EDD - bhartipay Gateway
-Plugin URL: http://easydigitaldownloads.com/extension/bhartipay-gateway
-Description: A bhartipay gateway for Easy Digital Downloads
+Plugin Name: EDD - subpe Gateway
+Plugin URL: http://easydigitaldownloads.com/extension/subpe-gateway
+Description: A subpe gateway for Easy Digital Downloads
 Version: 1.0
 Author: Rohit Kr Singh
-Author URI: https://www.bhartipay.com/
+Author URI: https://www.subpe.com/
 Contributors: mordauk
 */
 
@@ -13,16 +13,16 @@ Contributors: mordauk
 
 // registers the gateway
 function pw_edd_register_gateway($gateways) {
-	$gateways['bhartipay_gateway'] = array('admin_label' => 'bhartipay Gateway', 'checkout_label' => __('bhartipay Gateway', 'pw_edd'));
+	$gateways['subpe_gateway'] = array('admin_label' => 'subpe Gateway', 'checkout_label' => __('subpe Gateway', 'pw_edd'));
 	return $gateways;	
 }
 add_filter('edd_payment_gateways', 'pw_edd_register_gateway');
 
-function pw_edd_bhartipay_gateway_cc_form() {
+function pw_edd_subpe_gateway_cc_form() {
 	// register the action to remove default CC form
 	return;
 }
-add_action('edd_bhartipay_gateway_cc_form', 'pw_edd_bhartipay_gateway_cc_form');
+add_action('edd_subpe_gateway_cc_form', 'pw_edd_subpe_gateway_cc_form');
 
 // processes the payment
 function pw_edd_process_payment($purchase_data) {
@@ -151,7 +151,7 @@ function pw_edd_process_payment($purchase_data) {
 		edd_send_back_to_checkout('?payment-mode=' . $purchase_data['post_data']['edd-gateway']);
 	}
 }
-add_action('edd_gateway_bhartipay_gateway', 'pw_edd_process_payment');
+add_action('edd_gateway_subpe_gateway', 'pw_edd_process_payment');
 
 
 
@@ -159,30 +159,30 @@ add_action('edd_gateway_bhartipay_gateway', 'pw_edd_process_payment');
 
 
 //Return Response
-function edd_listen_for_bhartipay_gateway() {
+function edd_listen_for_subpe_gateway() {
 
 	if ( isset( $_POST['RESPONSE_CODE'] ) && $_POST['CUST_EMAIL'] != "" ) {
-            do_action( 'edd_verify_bhartipay_gateway' );    
+            do_action( 'edd_verify_subpe_gateway' );    
                    
 	}
 }
-add_action( 'init', 'edd_listen_for_bhartipay_gateway' );
+add_action( 'init', 'edd_listen_for_subpe_gateway' );
 
 
 
-function edd_process_bhartipay_gateway() {
+function edd_process_subpe_gateway() {
     global $edd_options;
     $payment = edd_insert_payment($payment);
     $order_id=$payment;
           
 		  if($_POST['STATUS']!='Captured'){
-		            edd_send_back_to_checkout( '?payment-mode=bhartipay_gateway' );            
+		            edd_send_back_to_checkout( '?payment-mode=subpe_gateway' );            
 		        }
            
            if($_POST['STATUS']=='Captured')
 					{
 						$payment_meta   = edd_get_payment_meta( $order_id );
-						edd_insert_payment_note( $order_id, sprintf( __( 'Thank you for your order . Your transaction has been successful. bhartipay Transaction ID: %s', 'edd' ) , $_POST['STATUS'] ) );
+						edd_insert_payment_note( $order_id, sprintf( __( 'Thank you for your order . Your transaction has been successful. subpe Transaction ID: %s', 'edd' ) , $_POST['STATUS'] ) );
 						edd_set_payment_transaction_id( $order_id, $_POST['STATUS'] );
 						edd_update_payment_status( $order_id, 'complete' );
 						edd_update_payment_status('complete' );
@@ -190,17 +190,17 @@ function edd_process_bhartipay_gateway() {
 						edd_send_to_success_page();
 					}
 					else{
-						edd_record_gateway_error( __( 'bhartipay Error', 'edd' ), sprintf( __( 'It seems some issue in server to server communication. Kindly connect with administrator.', 'edd' ), '' ), $payment_id );
+						edd_record_gateway_error( __( 'subpe Error', 'edd' ), sprintf( __( 'It seems some issue in server to server communication. Kindly connect with administrator.', 'edd' ), '' ), $payment_id );
 						edd_update_payment_status( $payment_id, 'failed' );
 						edd_insert_payment_note( $payment_id, sprintf( __( 'It seems some issue in server to server communication. Kindly connect with administrator.', 'edd' ), '' ) );
-						wp_redirect( '?page_id=6&payment-mode=bhartipay_gateway' );
+						wp_redirect( '?page_id=6&payment-mode=subpe_gateway' );
 					}
 
 
  
 	
 }
-add_action( 'edd_verify_bhartipay_gateway', 'edd_process_bhartipay_gateway' );
+add_action( 'edd_verify_subpe_gateway', 'edd_process_subpe_gateway' );
 
 //Return Response handle
 
@@ -214,10 +214,10 @@ add_action( 'edd_verify_bhartipay_gateway', 'edd_process_bhartipay_gateway' );
 // adds the settings to the Payment Gateways section
 function pw_edd_add_settings($settings) {
 
-	$bhartipay_gateway_settings = array(
+	$subpe_gateway_settings = array(
 		array(
-			'id' => 'bhartipay_gateway_settings',
-			'name' => '<strong>' . __('bhartipay Gateway Settings', 'pw_edd') . '</strong>',
+			'id' => 'subpe_gateway_settings',
+			'name' => '<strong>' . __('subpe Gateway Settings', 'pw_edd') . '</strong>',
 			'desc' => __('Configure the gateway settings', 'pw_edd'),
 			'type' => 'header'
 		),
@@ -245,7 +245,7 @@ function pw_edd_add_settings($settings) {
 		array(
 			'id' => 'transaction_url',
 			'name' => __('Transaction URL', 'pw_edd'),
-			'desc' => __('Transaction URL Provided by Bhartipay', 'pw_edd'),
+			'desc' => __('Transaction URL Provided by Subpe', 'pw_edd'),
 			'type' => 'text',
 			'size' => 'regular'
 		),
@@ -267,7 +267,7 @@ function pw_edd_add_settings($settings) {
 	);
 	
 
-	return array_merge($settings, $bhartipay_gateway_settings);	
+	return array_merge($settings, $subpe_gateway_settings);	
 }
 add_filter('edd_settings_gateways', 'pw_edd_add_settings');
 
